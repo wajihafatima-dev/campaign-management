@@ -1,5 +1,4 @@
 "use client";
-
 import { Box, Grid } from "@mui/material";
 import { Campaign } from "@/types/campaign";
 import { getCampaignStats } from "@/utils/analytics";
@@ -54,10 +53,12 @@ export default function SummaryCards({ campaigns }: Props) {
     <Grid container spacing={1.5} sx={{ mb: 3 }}>
       {cards?.map((card, index) => (
         <Grid
-          xs={12}
-          sm={6}
-          md={4}
-          lg={4}
+          size={{
+            xs: 12,
+            sm: 6,
+            md: 4,
+            lg: 4,
+          }}
           key={index}
           sx={{ flex: { xs: "auto", md: 1 } }}
         >
@@ -70,7 +71,7 @@ export default function SummaryCards({ campaigns }: Props) {
               borderRadius: 3,
               p: 2,
               display: "flex",
-              flexDirection: "column", 
+              flexDirection: "column",
               alignItems: "flex-start",
               gap: 1.5,
               cursor: "pointer",
