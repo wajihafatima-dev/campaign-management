@@ -5,75 +5,149 @@ import { GridColDef } from "@mui/x-data-grid";
 
 import AppDataGrid from "@/components/table/AppDataGrid";
 import AppModal from "@/components/modals/AppModal";
-import { Box } from "@mui/material";
+import EditModal from "@/components/modals/EditModal";
+import { Box, Button, Typography } from "@mui/material";
+import CampaignForm from "@/components/forms/CampaignForm";
+import { Campaign } from "@/types/campaign";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
-const rows = [
-  {
-    id: 1,
-    name: "Summer Sale",
-    status: "Active",
-    budget: 1000,
-  },
-  {
-    id: 2,
-    name: "Black Friday",
-    status: "Paused",
-    budget: 2500,
-  },
-];
-
-const columns: GridColDef[] = [
-  {
-    field: "name",
-    headerName: "Campaign Name",
-    flex: 1,
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    flex: 1,
-  },
-  {
-    field: "budget",
-    headerName: "Budget",
-    flex: 1,
-  },
-];
+import {
+  addCampaign,
+  deleteCampaign,
+  setSelectedCampaign,
+  updateCampaign,
+} from "@/store/slices/campaignSlice";
+import StatusFilterDropdown from "@/components/dropdown/StatusFilterDropdown";
 
 export default function CampaignsPage() {
-  const [selectedRow, setSelectedRow] = useState<object | null>(null);
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
-  const handleView = (row: object) => {
-    setSelectedRow(row);
-    setModalOpen(true);
+  const campaigns = useAppSelector((state) => state.campaigns.campaigns);
+  const [filterBy, setFilterBy] = useState<
+    "All" | "Active" | "Paused" | "Draft"
+  >("All");
+  const [addModalOpen, setAddModalOpen] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [editData, setEditData] = useState<Campaign | null>(null);
 
-    // View modal open
-    console.log("View", row);
+  const handleAddCampaign = (data: Campaign) => {
+    dispatch(addCampaign(data));
+    setAddModalOpen(false);
   };
 
-  const handleEdit = (row: object) => {
-    console.log("Edit", row);
+  const handleEdit = (row: Campaign) => {
+    dispatch(setSelectedCampaign(row)); // optional
+    setEditData(row);
+    setEditModalOpen(true);
   };
 
-  const handleDelete = (row: object) => {
-    console.log("Delete", row);
+  const handleUpdateCampaign = (data: Campaign) => {
+    dispatch(updateCampaign(data));
+    setEditModalOpen(false);
+    setEditData(null);
   };
+
+  const handleDelete = (row: Campaign) => {
+    dispatch(deleteCampaign(row.id));
+  };
+
+  const filteredCampaigns = campaigns.filter((c) => {
+    if (filterBy === "All") return true;
+    return c.status === filterBy;
+  });
+  const columns: GridColDef[] = [
+    {
+      field: "title",
+      headerName: "Campaign Title",
+      flex: 1,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+    },
+    {
+      field: "budget",
+      headerName: "Budget",
+      flex: 1,
+    },
+    {
+      field: "leadsGenerated",
+      headerName: "Leads Generated",
+      flex: 1,
+    },
+  ];
 
   return (
     <>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: { xs: "flex-start", sm: "center" },
+          flexDirection: { xs: "column", sm: "row" },
+          gap: 2,
+          mb: 3,
+          p: { xs: 2, sm: 2 },
+          bgcolor: "#fff",
+          borderRadius: 3,
+          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+        }}
+      >
+        <Box>
+          <Typography
+            variant="h5"
+            sx={{ pb: "15px" }}
+            fontWeight={700}
+            color="#111827"
+          >
+            Campaign Management
+          </Typography>
+          <StatusFilterDropdown value={filterBy} onChange={setFilterBy} />
+        </Box>
+
+        <Button
+          variant="contained"
+          onClick={() => setAddModalOpen(true)}
+          sx={{
+            bgcolor: "#2563EB",
+            borderRadius: 2,
+            px: 3,
+            textTransform: "none",
+            fontWeight: 600,
+            "&:hover": {
+              bgcolor: "#1D4ED8",
+            },
+          }}
+        >
+          + Add Campaign
+        </Button>
+      </Box>
+      {/* TABLE */}
       <AppDataGrid
-        rows={rows}
+        rows={filteredCampaigns}
         columns={columns}
-        onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
+      {/* ADD MODAL */}
       <AppModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="View Campaign"
-        children={<Box>Ali</Box>}
+        open={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        title="Add Campaign"
+      >
+        <CampaignForm onSubmit={handleAddCampaign} />
+      </AppModal>
+      {/* EDIT MODAL */}
+      <EditModal
+        open={editModalOpen}
+        initialData={editData}
+        onClose={() => {
+          setEditModalOpen(false);
+          setEditData(null);
+        }}
+        onSubmit={handleUpdateCampaign}
       />
     </>
   );

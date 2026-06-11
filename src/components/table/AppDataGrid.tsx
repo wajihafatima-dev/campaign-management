@@ -1,110 +1,112 @@
 "use client";
 
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+} from "@mui/x-data-grid";
 
-import { Box, IconButton, Stack, Tooltip, Chip } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Stack,
+  Tooltip,
+  Chip,
+} from "@mui/material";
 
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { AppDataGridProps } from "@/types/campaign";
 
-interface AppDataGridProps {
-  rows: any[];
-  columns: GridColDef[];
-  loading?: boolean;
-
-  onView?: (row: any) => void;
-  onEdit?: (row: any) => void;
-  onDelete?: (row: any) => void;
-}
-
-const AppDataGrid = ({
+const AppDataGrid = <T,>({
   rows,
   columns,
   loading = false,
-  onView,
   onEdit,
   onDelete,
-}: AppDataGridProps) => {
-  // -------------------------
-  // STATUS COLUMN (CHIP UI)
-  // -------------------------
+}: AppDataGridProps<T>) => {
+  // STATUS COLUMN
   const statusColumn: GridColDef = {
     field: "status",
     headerName: "Status",
     width: 140,
-    display: "flex",
     align: "center",
+    display: "flex",
     headerAlign: "center",
+
     renderCell: (params: GridRenderCellParams) => {
       const value = params.value?.toLowerCase();
 
-      let color: "success" | "warning" | "default" | "error" = "default";
-      let label = params.value;
+      let color:
+        | "success"
+        | "warning"
+        | "default"
+        | "error" = "default";
+
+      let bg = "#E5E7EB";
+      let text = "#111827";
 
       switch (value) {
         case "active":
           color = "success";
-          label = "Active";
+          bg = "#DCFCE7";
+          text = "#166534";
           break;
 
         case "paused":
           color = "warning";
-          label = "Paused";
+          bg = "#FEF3C7";
+          text = "#92400E";
           break;
 
         case "draft":
           color = "default";
-          label = "Draft";
+          bg = "#E5E7EB";
+          text = "#374151";
           break;
-
-        default:
-          color = "error";
-          label = params.value || "Unknown";
       }
 
       return (
         <Chip
-          label={label}
+          label={params.value}
           size="small"
-          color={color}
-          variant="filled"
           sx={{
-            fontWeight: 500,
-            height: 24,
+            fontWeight: 600,
             fontSize: "12px",
+            backgroundColor: bg,
+            color: text,
+            borderRadius: "8px",
+            px: 1,
           }}
         />
       );
     },
   };
 
-  // -------------------------
-  // ACTION COLUMN
-  // -------------------------
   const actionColumn: GridColDef = {
     field: "actions",
     headerName: "Actions",
+    width: 140,
     sortable: false,
     filterable: false,
-    width: 150,
-    display: "flex",
     align: "center",
+    display:"flex",
     headerAlign: "center",
 
     renderCell: (params: GridRenderCellParams) => (
-      <Stack direction="row" sx={{ gap: 0.5 }}>
-        {onView && (
-          <Tooltip title="View">
-            <IconButton size="small" onClick={() => onView(params.row)}>
-              <VisibilityOutlinedIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        )}
-
+      <Stack direction="row" spacing={0.5}>
         {onEdit && (
           <Tooltip title="Edit">
-            <IconButton size="small" onClick={() => onEdit(params.row)}>
+            <IconButton
+              size="small"
+              sx={{
+                color: "#F59E0B",
+                "&:hover": {
+                  backgroundColor: "#FFFBEB",
+                },
+              }}
+              onClick={() => onEdit(params.row)}
+            >
               <EditOutlinedIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -114,7 +116,12 @@ const AppDataGrid = ({
           <Tooltip title="Delete">
             <IconButton
               size="small"
-              color="error"
+              sx={{
+                color: "#EF4444",
+                "&:hover": {
+                  backgroundColor: "#FEF2F2",
+                },
+              }}
               onClick={() => onDelete(params.row)}
             >
               <DeleteOutlineOutlinedIcon fontSize="small" />
@@ -125,11 +132,8 @@ const AppDataGrid = ({
     ),
   };
 
-  // -------------------------
-  // FIX: REMOVE DUPLICATE STATUS COLUMN
-  // -------------------------
   const finalColumns: GridColDef[] = [
-    ...columns.filter((col) => col.field !== "status"),
+    ...columns.filter((c) => c.field !== "status"),
     statusColumn,
     actionColumn,
   ];
@@ -138,8 +142,10 @@ const AppDataGrid = ({
     <Box
       sx={{
         width: "100%",
-        bgcolor: "#fff",
-        overflow: "hidden",
+        bgcolor: "#FFFFFF",
+        borderRadius: 3,
+        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+        p: 1,
       }}
     >
       <DataGrid
@@ -148,29 +154,38 @@ const AppDataGrid = ({
         loading={loading}
         disableRowSelectionOnClick
         pageSizeOptions={[5, 10, 25, 50]}
-        disableColumnMenu
         pagination
+        disableColumnMenu
         hideFooterSelectedRowCount
-        localeText={{ noRowsLabel: "No results found" }}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              page: 0,
-              pageSize: 10,
-            },
-          },
-        }}
+        autoHeight
         sx={{
           border: "none",
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "#F9FAFB",
+            borderBottom: "1px solid #E5E7EB",
+            fontWeight: 700,
+          },
+          "& .MuiDataGrid-columnHeaderTitle": {
+            fontWeight: 700,
+            color: "#111827",
+          },
+          "& .MuiDataGrid-row": {
+            borderBottom: "1px solid #F3F4F6",
+            transition: "all 0.2s ease",
+          },
+          "& .MuiDataGrid-row:hover": {
+            backgroundColor: "#F9FAFB",
+          },
+          "& .MuiDataGrid-cell": {
+            fontSize: "13px",
+            color: "#374151",
+          },
           "& .MuiDataGrid-cell:focus": { outline: "none" },
           "& .MuiDataGrid-cell:focus-within": { outline: "none" },
           "& .MuiDataGrid-columnHeader:focus": { outline: "none" },
-          "& .MuiDataGrid-columnHeader:focus-within": { outline: "none" },
-          "& .MuiTablePagination-displayedRows": { display: "none" },
         }}
       />
     </Box>
   );
 };
-
 export default AppDataGrid;

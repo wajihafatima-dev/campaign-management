@@ -4,31 +4,30 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  IconButton,
   Box,
+  IconButton,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
-import { ReactNode } from "react";
 import { useTheme } from "@mui/material/styles";
+import CampaignForm from "@/components/forms/CampaignForm";
+import { Campaign } from "@/types/campaign";
 
-interface AppModalProps {
+interface EditCampaignModalProps {
   open: boolean;
+  initialData: Campaign | null;
   onClose: () => void;
-  title: ReactNode;
-  children: ReactNode;
-  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
+  onSubmit: (data: Campaign) => void;
 }
 
-const AppModal = ({
+export default function EditModal({
   open,
+  initialData,
   onClose,
-  title,
-  children,
-  maxWidth = "sm",
-}: AppModalProps) => {
+  onSubmit,
+}: EditCampaignModalProps) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -38,12 +37,11 @@ const AppModal = ({
       onClose={onClose}
       fullWidth
       fullScreen={fullScreen}
-      maxWidth={maxWidth}
+      maxWidth="sm"
       keepMounted
       sx={{
         "& .MuiDialog-paper": {
           borderRadius: fullScreen ? 0 : 3,
-          p: 0,
           boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
         },
       }}
@@ -78,7 +76,7 @@ const AppModal = ({
             gap: 1,
           }}
         >
-          {title}
+         Edit Campaign
         </Typography>
 
         <IconButton
@@ -110,11 +108,13 @@ const AppModal = ({
             },
           }}
         >
-          {children}
+          <CampaignForm
+            mode="edit"
+            initialValues={initialData}
+            onSubmit={onSubmit}
+          />
         </Box>
       </DialogContent>
     </Dialog>
   );
-};
-
-export default AppModal;
+}
