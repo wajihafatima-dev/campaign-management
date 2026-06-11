@@ -98,9 +98,7 @@ export default function CampaignsPage() {
         <Box>
           <Typography
             variant="h5"
-            sx={{ pb: "15px" }}
-            fontWeight={700}
-            color="#111827"
+            sx={{ pb: "15px" ,fontWeight:700,color:"#111827"}}
           >
             Campaign Management
           </Typography>
@@ -124,14 +122,12 @@ export default function CampaignsPage() {
           + Add Campaign
         </Button>
       </Box>
-      {/* TABLE */}
       <AppDataGrid
         rows={filteredCampaigns}
         columns={columns}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
-      {/* ADD MODAL */}
       <AppModal
         open={addModalOpen}
         onClose={() => setAddModalOpen(false)}
