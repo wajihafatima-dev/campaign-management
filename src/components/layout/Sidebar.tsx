@@ -62,7 +62,7 @@ const Sidebar: FC<SidebarProps> = ({ onSidebarClose }) => {
   const handleConfirmLogout = () => {
     setLogoutOpen(false);
     onSidebarClose?.();
-    router.push("/login");
+    router.push("/");
   };
 
   return (
