@@ -1,11 +1,7 @@
 "use client";
 import { Box, Typography, MenuItem, Select } from "@mui/material";
 
-export type CampaignStatusFilter =
-  | "All"
-  | "Active"
-  | "Paused"
-  | "Draft";
+export type CampaignStatusFilter = "All" | "Active" | "Paused" | "Draft";
 
 interface StatusFilterDropdownProps {
   value: CampaignStatusFilter;
@@ -25,20 +21,14 @@ export default function StatusFilterDropdown({
         px: 1,
       }}
     >
-      <Typography
-        fontSize={13}
-        color="#6B7280"
-        fontWeight={500}
-      >
+      <Typography sx={{ color: "#6B7280", fontSize: 13, fontWeight: 500 }}>
         Filter:
       </Typography>
 
       <Select
         size="small"
         value={value}
-        onChange={(e) =>
-          onChange(e.target.value as CampaignStatusFilter)
-        }
+        onChange={(e) => onChange(e.target.value as CampaignStatusFilter)}
         sx={{
           minWidth: 170,
           fontSize: 14,

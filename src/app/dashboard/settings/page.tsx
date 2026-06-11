@@ -74,7 +74,7 @@ export default function SettingsPage() {
         }}
       >
         {/* Profile Image */}
-        <Stack spacing={2} mb={3} sx={{ alignItems: "center" }}>
+       <Stack spacing={2} sx={{ alignItems: "center", mb: 3 }}>
           <Avatar
             src={preview || profile.image}
             sx={{ width: 90, height: 90 }}
