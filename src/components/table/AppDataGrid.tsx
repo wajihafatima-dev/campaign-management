@@ -153,7 +153,7 @@ const AppDataGrid = <T,>({
         columns={finalColumns}
         loading={loading}
         disableRowSelectionOnClick
-        pageSizeOptions={[5, 10, 25, 50]}
+        pageSizeOptions={[5, 10, 25, 50,100]}
         pagination
         disableColumnMenu
         hideFooterSelectedRowCount

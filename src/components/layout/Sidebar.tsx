@@ -22,7 +22,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { FC, useState } from "react";
 
 interface SidebarProps {
-  onClickItem?: () => void;
+  onSidebarClose?: () => void;
 }
 
 const menuItems = [
@@ -38,7 +38,7 @@ const menuItems = [
   },
 ];
 
-const Sidebar: FC<SidebarProps> = ({ onClickItem, onSidebarClose }) => {
+const Sidebar: FC<SidebarProps> = ({ onSidebarClose }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -56,11 +56,6 @@ const Sidebar: FC<SidebarProps> = ({ onClickItem, onSidebarClose }) => {
   const handleConfirmLogout = () => {
     setLogoutOpen(false);
     onSidebarClose?.();
-
-    // TODO: Add your logout logic here
-    // localStorage.removeItem("token");
-    // sessionStorage.clear();
-
     router.push("/login");
   };
 
@@ -69,12 +64,29 @@ const Sidebar: FC<SidebarProps> = ({ onClickItem, onSidebarClose }) => {
       <Box
         sx={{
           height: "100%",
-          px: 0.5,
-          pt: 2,
           display: "flex",
           flexDirection: "column",
         }}
       >
+       <Box
+  sx={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottom: "1px solid #eee",
+  }}
+>
+  <Box
+    component="img"
+    src="/images/campaign-logo.png"
+    alt="Logo"
+    sx={{
+      width: "100%",   // fixed size (important)
+      height: "100%",
+      objectFit: "contain",
+    }}
+  />
+</Box>
         <List>
           {menuItems.map((item) => {
             const isActive = pathname === item.path;
@@ -85,7 +97,6 @@ const Sidebar: FC<SidebarProps> = ({ onClickItem, onSidebarClose }) => {
                 disableRipple
                 onClick={() => {
                   router.push(item.path);
-                  onClickItem?.();
                   onSidebarClose?.();
                 }}
                 sx={{

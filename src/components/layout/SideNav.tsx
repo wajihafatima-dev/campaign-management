@@ -10,7 +10,7 @@ interface SideNavProps {
   onSidebarClose: () => void;
 }
 
-const SideNav: FC<SideNavProps> = ({ isMobileSidebarOpen, onSidebarClose }) => {
+const SideNav: FC<SideNavProps> = ({ isMobileSidebarOpen, onSidebarClose}) => {
   const theme: Theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("md"));
 
