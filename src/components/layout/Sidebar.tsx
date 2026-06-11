@@ -20,6 +20,7 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useState } from "react";
+import { Settings } from "@mui/icons-material";
 
 interface SidebarProps {
   onSidebarClose?: () => void;
@@ -35,6 +36,11 @@ const menuItems = [
     label: "Campaigns",
     icon: <CampaignIcon />,
     path: "/dashboard/campaigns",
+  },
+  {
+    label: "Settings",
+    icon: <Settings />,
+    path: "/dashboard/settings",
   },
 ];
 
@@ -68,25 +74,25 @@ const Sidebar: FC<SidebarProps> = ({ onSidebarClose }) => {
           flexDirection: "column",
         }}
       >
-       <Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderBottom: "1px solid #eee",
-  }}
->
-  <Box
-    component="img"
-    src="/images/campaign-logo.png"
-    alt="Logo"
-    sx={{
-      width: "100%",   // fixed size (important)
-      height: "100%",
-      objectFit: "contain",
-    }}
-  />
-</Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderBottom: "1px solid #eee",
+          }}
+        >
+          <Box
+            component="img"
+            src="/images/campaign-logo.png"
+            alt="Logo"
+            sx={{
+              width: "100%", // fixed size (important)
+              height: "100%",
+              objectFit: "contain",
+            }}
+          />
+        </Box>
         <List>
           {menuItems.map((item) => {
             const isActive = pathname === item.path;

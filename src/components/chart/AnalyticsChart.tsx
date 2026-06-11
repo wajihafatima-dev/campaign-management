@@ -12,11 +12,14 @@ import {
   Scatter,
 } from "recharts";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { useAppSelector } from "@/hooks/useAppSelector";
 
 export default function AnalyticsChart() {
   const campaigns = useAppSelector((state) => state.campaigns.campaigns);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const chartData = (campaigns || []).map((campaign, index) => ({
     day: `C-${index + 1}`,
@@ -27,10 +30,11 @@ export default function AnalyticsChart() {
   return (
     <Box
       sx={{
-        width: 500,
+        width: "100%", // ✅ responsive
+        maxWidth: 700, // optional constraint for large screens
         bgcolor: "#fff",
         borderRadius: 3,
-        p: 3,
+        p: { xs: 2, sm: 3 },
         border: "1px solid #E5E7EB",
         boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
       }}
@@ -40,40 +44,46 @@ export default function AnalyticsChart() {
           fontWeight: 700,
           mb: 2,
           color: "#111827",
+          fontSize: { xs: "14px", sm: "16px" },
         }}
       >
         Campaign Performance
       </Typography>
 
-      <ResponsiveContainer width="100%" height={250}>
-        <ComposedChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+      <Box sx={{ width: "100%", height: { xs: 220, sm: 260, md: 300 } }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
 
-          <XAxis dataKey="day" tick={{ fontSize: 10 }} />
+            <XAxis dataKey="day" tick={{ fontSize: isMobile ? 9 : 11 }} />
 
-          <YAxis tick={{ fontSize: 10 }} />
+            <YAxis
+              tick={{ fontSize: isMobile ? 9 : 11 }}
+              width={isMobile ? 30 : 40}
+            />
 
-          <Tooltip />
+            <Tooltip />
 
-          <Bar
-            dataKey="budget"
-            barSize={24}
-            fill="#93C5FD"
-            radius={[8, 8, 0, 0]}
-          />
+            <Bar
+              dataKey="budget"
+              barSize={isMobile ? 16 : 24}
+              fill="#93C5FD"
+              radius={[8, 8, 0, 0]}
+            />
 
-          <Line
-            type="monotone"
-            dataKey="leads"
-            stroke="#2563EB"
-            strokeWidth={2}
-            dot={{ r: 2 }}
-            activeDot={{ r: 4 }}
-          />
+            <Line
+              type="monotone"
+              dataKey="leads"
+              stroke="#2563EB"
+              strokeWidth={2}
+              dot={{ r: isMobile ? 1.5 : 3 }}
+              activeDot={{ r: isMobile ? 3 : 5 }}
+            />
 
-          <Scatter dataKey="leads" fill="#10B981" />
-        </ComposedChart>
-      </ResponsiveContainer>
+            <Scatter dataKey="leads" fill="#10B981" />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </Box>
     </Box>
   );
 }

@@ -52,15 +52,14 @@ export default function SummaryCards({ campaigns }: Props) {
 
   return (
     <Grid container spacing={1.5} sx={{ mb: 3 }}>
-      {cards.map((card) => (
+      {cards?.map((card, index) => (
         <Grid
-          item
           xs={12}
           sm={6}
           md={4}
-          lg={true}
-          key={card.title}
-          sx={{ flex: 1 }}
+          lg={4}
+          key={index}
+          sx={{ flex: { xs: "auto", md: 1 } }}
         >
           <Box
             sx={{
@@ -71,7 +70,7 @@ export default function SummaryCards({ campaigns }: Props) {
               borderRadius: 3,
               p: 2,
               display: "flex",
-              flexDirection: "column", // ⭐ IMPORTANT CHANGE
+              flexDirection: "column", 
               alignItems: "flex-start",
               gap: 1.5,
               cursor: "pointer",
@@ -102,19 +101,35 @@ export default function SummaryCards({ campaigns }: Props) {
 
             <Box>
               <Typography
-                sx={{ color: "#374151", fontWeight: 800,fontSize: 13, lineHeight: 1.2 }}
+                sx={{
+                  color: "#374151",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  lineHeight: 1.2,
+                }}
               >
                 {card.title}
               </Typography>
 
               <Typography
-                sx={{ color: "#111827",  fontWeight: 600,fontSize: 13,lineHeight: 1.2, mt: 0.2 }}
+                sx={{
+                  color: "#111827",
+                  fontWeight: 600,
+                  fontSize: 13,
+                  lineHeight: 1.2,
+                  mt: 0.2,
+                }}
               >
                 {card.value}
               </Typography>
 
               <Typography
-                sx={{ color: "#9CA3AF", mt: 0.3,fontSize:13, fontWeight: 500 }}
+                sx={{
+                  color: "#9CA3AF",
+                  mt: 0.3,
+                  fontSize: 13,
+                  fontWeight: 500,
+                }}
               >
                 {card.subtitle}
               </Typography>

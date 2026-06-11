@@ -65,7 +65,6 @@ export default function EditModal({
         }}
       >
         <Typography
-          variant="h6"
           sx={{
             fontWeight: 700,
             fontSize: { xs: "15px", sm: "18px" },
