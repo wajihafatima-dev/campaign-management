@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Campaign } from "@/types/campaign";
+import { v4 as uuidv4 } from "uuid";
 
 interface CampaignState {
   campaigns: Campaign[];
@@ -7,7 +8,50 @@ interface CampaignState {
 }
 
 const initialState: CampaignState = {
-  campaigns: [],
+  campaigns: [
+    {
+      id: uuidv4(),
+      title: "Facebook Lead Generation Q3",
+      budget: 50000,
+      status: "Active",
+      leadsGenerated: 120,
+    },
+    {
+      id: uuidv4(),
+      title: "Google Ads Summer Sale",
+      budget: 75000,
+      status: "Paused",
+      leadsGenerated: 85,
+    },
+    {
+      id: uuidv4(),
+      title: "Instagram Brand Awareness",
+      budget: 45000,
+      status: "Active",
+      leadsGenerated: 210,
+    },
+    {
+      id: uuidv4(),
+      title: "YouTube Video Promotion",
+      budget: 100000,
+      status: "Active",
+      leadsGenerated: 350,
+    },
+    {
+      id: uuidv4(),
+      title: "LinkedIn B2B Outreach",
+      budget: 30000,
+      status: "Draft",
+      leadsGenerated: 40,
+    },
+    {
+      id: uuidv4(),
+      title: "Email Marketing Campaign",
+      budget: 20000,
+      status: "Active",
+      leadsGenerated: 95,
+    },
+  ],
   selectedCampaign: null,
 };
 
@@ -20,10 +64,10 @@ const campaignSlice = createSlice({
       state.campaigns.push(action.payload);
     },
 
-    // UPDATE 
+    // UPDATE
     updateCampaign: (state, action: PayloadAction<Campaign>) => {
       const index = state.campaigns.findIndex(
-        (c) => c.id === action.payload.id
+        (c) => c.id === action.payload.id,
       );
 
       if (index !== -1) {
@@ -36,16 +80,11 @@ const campaignSlice = createSlice({
 
     // DELETE
     deleteCampaign: (state, action: PayloadAction<string>) => {
-      state.campaigns = state.campaigns.filter(
-        (c) => c.id !== action.payload
-      );
+      state.campaigns = state.campaigns.filter((c) => c.id !== action.payload);
     },
 
-    // SELECT 
-    setSelectedCampaign: (
-      state,
-      action: PayloadAction<Campaign | null>
-    ) => {
+    // SELECT
+    setSelectedCampaign: (state, action: PayloadAction<Campaign | null>) => {
       state.selectedCampaign = action.payload;
     },
 
